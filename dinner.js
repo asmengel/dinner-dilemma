@@ -37,33 +37,36 @@ function renderApp(state, elements) {
 
 
 
-function getDataFromApi(searchTerm) {
+function getDataFromApi(searchTerm, callback) {
     const query = {
         q: `${searchTerm}`,
         // per_page: 10,
-        app_id: '67bb135e',
-        app_key: 'cf938fd53dff4dc81290c3ee4cbe8846',
+        app_id: '5db20bc7',
+        app_key: 'fe650f1917f0df37d3296b96bb8f92d1',
         to: 0,
         from: 10
-    };
+    }
+ $.getJSON(RECIPE_SEARCH_URL, query, callback);
+}
 
-    $.getJSON(RECIPE_SEARCH_URL, query, function (data) {
-        console.log(data);
-        //globalData = data;
-        //displayYouTubeSearchData(data)
-        showResults(data.items)
-    });
-};
+function displayRecipeData(data) {
+   
+    const results = data.hits.map((item, index) => {
+            return renderRecipeResult(item);
+    })
+    $('.js-search-results').html(results);
+}
 
-function showResults(result) {
-    var html = " ";
-    $.each(result, function (index, value) {
-        
-            var title = value.snippet.title;
-            var videoLink = "https://www.youtube.com/watch?v=" + value.id.videoId;
-            html += `<div><h3>${value.snippet.title}</h3><img src="${value.snippet.thumbnails.default.url}"/><a href="${videoLink}">${videoLink}</a><p>${value.snippet.description}</p><p>${value.snippet.publishedAt}</p></div>`;
-        }
-    )
+function renderRecipeResult(result) {
+    return `
+    <div>
+        <h3><a href="${result.recipe.shareAs}" target="_blank">${result.recipe.label}</a></h3>
+        <a class="js-recipe-thumbnail" href="${result.recipe.label}" target="_blank"><img src="${result.recipe.image}"></a>
+        <h5>This recipe is brought to you by ${result.recipe.source}</h5>
+    </div>
+    `;
+}
+
 
     $('.js-home-submit').on('click', function (event) {
         event.preventDefault();
