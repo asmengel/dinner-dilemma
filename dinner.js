@@ -14,6 +14,8 @@ const PAGE_ELEMENTS = {
 const RECIPE_SEARCH_URL = 'https://api.edamam.com/search';
 
 
+
+
 function renderApp(state, elements) {
     // default to hiding all routes, then show the current route
     Object.keys(elements).forEach(function (route) {
@@ -35,19 +37,19 @@ function renderApp(state, elements) {
     }
 }
 
-
-
 function getDataFromApi(searchTerm, callback) {
     const query = {
         q: `${searchTerm}`,
         // per_page: 10,
         app_id: '5db20bc7',
         app_key: 'fe650f1917f0df37d3296b96bb8f92d1',
-        to: 0,
-        from: 10
+        to: 10,
+        from: 0
     }
- $.getJSON(RECIPE_SEARCH_URL, query, callback);
+ $.getJSON(RECIPE_SEARCH_URL, query, displayRecipeData);
+    // $.getJSON(RECIPE_SEARCH_URL, query).done(resp => {displayRecipeData(resp)});
 }
+
 
 function displayRecipeData(data) {
    
