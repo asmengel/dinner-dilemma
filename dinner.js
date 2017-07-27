@@ -47,7 +47,8 @@ function getDataFromApi(searchTerm, callback) {
         from: 0
     }
  $.getJSON(RECIPE_SEARCH_URL, query, displayRecipeData);
-    // $.getJSON(RECIPE_SEARCH_URL, query).done(resp => {displayRecipeData(resp)});
+   
+ // $.getJSON(RECIPE_SEARCH_URL, query).done(resp => {displayRecipeData(resp)});
 }
 
 
@@ -63,7 +64,7 @@ function renderRecipeResult(result) {
     return `
     <div>
         <h3><a href="${result.recipe.shareAs}" target="_blank">${result.recipe.label}</a></h3>
-        <a class="js-recipe-thumbnail" href="${result.recipe.label}" target="_blank"><img src="${result.recipe.image}"></a>
+        <a class="js-recipe-thumbnail" href="${result.recipe.shareAs}" target="_blank"><img src="${result.recipe.image}"></a>
         <h5>This recipe is brought to you by ${result.recipe.source}</h5>
     </div>
     `;
@@ -90,7 +91,7 @@ function renderRecipeResult(result) {
     // User submits new search
     $('.js-results-submit').click(function (event) {
         event.preventDefault();
-        let typedInput = $("#textSearch").val();
+        let typedInput = $("#textSearch-2").val();
         console.log(typedInput);
         getDataFromApi(typedInput);
         $("#textSearch").val('');
@@ -98,7 +99,6 @@ function renderRecipeResult(result) {
         console.log('you are back on the results page with new results');
         renderApp(STATE, PAGE_ELEMENTS);
     });
-
 
     // Returns user to home screen
     $('.js-return-submit').click(function (event) {
@@ -112,3 +112,8 @@ function renderRecipeResult(result) {
     $(document).ready(function () {
         renderApp(STATE, PAGE_ELEMENTS);
     });
+
+
+
+    // if you always re-write the same thing
+    //$('.js-home-submit, .js-results-submit').on('click', handleSubmit);
