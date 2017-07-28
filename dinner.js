@@ -65,10 +65,9 @@ function displayRecipeData(state) {
     $('.js-search-results').html(results);
 }
 
-function renderRecipeResult(item) {
-    console.log(STATE);
+function renderRecipeResult(item, index) {
     return `
-    <div>
+    <div class="js-recipe-index js-index-${index}">
         <h3><a href="${item.recipe.shareAs}" target="_blank">${item.recipe.label}</a></h3>
         <a class="js-recipe-thumbnail" href="${item.recipe.shareAs}" target="_blank"><img src="${item.recipe.image}"></a>
         <h5>This recipe is brought to you by ${item.recipe.source}</h5>
@@ -122,6 +121,7 @@ function renderRecipeResult(item) {
     // event listener to reroute to recipe page and render recipe ingredients
     $('.js-search-results').on('click', '.js-recipe-ingredients',function(event){
         event.preventDefault();
+        // STATE.recipeDetail = $('.js-se)
         STATE.route = 'recipe';
         displayRecipeIngredients(STATE, event.currentTarget);
         renderApp(STATE, PAGE_ELEMENTS);
@@ -135,15 +135,17 @@ function renderRecipeResult(item) {
     
     // render results page with single recipe and details
     function renderRecipePage(state, element) {
-      return
-        `
+        console.log(state.data);
+        const recipeDetails = $('.js-recipe-index').find(state.data.recipe);
+       state.recipeDetail = `
         <div>
-            <h3><a href="${item.recipe.shareAs}" target="_blank">${item.recipe.label}</a></h3>
-            <a class="js-recipe-thumbnail" href="${item.recipe.shareAs}" target="_blank"><img src="${item.recipe.image}"></a>
-            <h5>This recipe is brought to you by ${item.recipe.source}</h5>
-                <p>${item.recipe.ingredientLines}</p> 
+            <h3><a href="${recipeDetails.shareAs}" target="_blank">${recipeDetails.label}</a></h3>
+            <a class="js-recipe-thumbnail" href="${recipeDetails.shareAs}" target="_blank"><img src="${recipeDetails.image}"></a>
+            <h5>This recipe is brought to you by ${recipeDetails.source}</h5>
+                <p>${recipeDetails.ingredientLines}</p> 
         </div>
-        `
+        `;
+        return state.recipeDetail;
     }
 
 
