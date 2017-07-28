@@ -71,7 +71,7 @@ function displayRecipeData(state) {
 
 function renderRecipeResult(item, index) {
     return `
-    <li class="js-recipe-index js-index-${index}">
+    <li class="js-recipe-index js-index-${index} col-4">
         <h3><a href="${item.recipe.shareAs}" target="_blank">${item.recipe.label}</a></h3>
         <a class="js-recipe-thumbnail" href="${item.recipe.shareAs}" target="_blank"><img src="${item.recipe.image}"></a>
         <h5>This recipe is brought to you by ${item.recipe.source}</h5>
@@ -90,6 +90,7 @@ $('.js-home-submit').on('click', function (event) {
     console.log(typedInput);
     getDataFromApi(typedInput);
     $("#textSearch").val('');
+    $('.home-page-container').hide();
     STATE.route = 'results';
     renderApp(STATE, PAGE_ELEMENTS);
 });
@@ -115,6 +116,7 @@ $('.js-results-submit').click(function (event) {
 // Returns user to home screen
 $('.js-return-submit').click(function (event) {
     event.preventDefault();
+    $('.home-page-container').show();
     STATE.route = 'start';
     console.log('you are back HOME');
     renderApp(STATE, PAGE_ELEMENTS);
