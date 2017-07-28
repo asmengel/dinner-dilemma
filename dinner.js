@@ -153,11 +153,22 @@ function renderRecipePage(state) {
             <h3><a href="${recipeDetails.shareAs}" target="_blank">${recipeDetails.label}</a></h3>
             <a class="js-recipe-thumbnail" href="${recipeDetails.shareAs}" target="_blank"><img src="${recipeDetails.image}"></a>
             <h5>This recipe is brought to you by ${recipeDetails.source}</h5>
-                <ul><li>${recipeDetails.ingredientLines.join('<li>')}</ul> 
+                <ul><li>${recipeDetails.ingredientLines.join('<li>')}</ul>
+               <button type="submit" class="js-back-button">
+                Back
+               </button>  
         </div>
         `;
     return state.recipeDetail;
 }
+
+
+$('.js-recipe-page').on('click', '.js-back-button', function (event) {
+    event.preventDefault();
+    STATE.route = 'results';
+    console.log('back to results');
+    renderApp(STATE, PAGE_ELEMENTS);
+});
 
 
 
