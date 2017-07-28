@@ -1,5 +1,7 @@
 const STATE = {
-    JSONresults: [],
+    searchTerm: 'tacos',
+    data: null,
+    recipeDetail: null,
     route: 'start' || 'results' || 'recipe',
 };
 
@@ -39,33 +41,40 @@ function renderApp(state, elements) {
 
 function getDataFromApi(searchTerm, callback) {
     const query = {
-        q: `${searchTerm}`,
+        q: searchTerm,
         // per_page: 10,
         app_id: '5db20bc7',
         app_key: 'fe650f1917f0df37d3296b96bb8f92d1',
         to: 10,
         from: 0
     }
- $.getJSON(RECIPE_SEARCH_URL, query, displayRecipeData);
+ $.getJSON(RECIPE_SEARCH_URL, query, function(results){
+    STATE.data = results;
+    displayRecipeData(STATE);
+ });
    
  // $.getJSON(RECIPE_SEARCH_URL, query).done(resp => {displayRecipeData(resp)});
 }
 
 
-function displayRecipeData(data) {
-   
+function displayRecipeData(state) {
+    const data = state.data;
     const results = data.hits.map((item, index) => {
             return renderRecipeResult(item);
     })
     $('.js-search-results').html(results);
 }
 
-function renderRecipeResult(result) {
+function renderRecipeResult(item) {
+    console.log(STATE);
     return `
     <div>
-        <h3><a href="${result.recipe.shareAs}" target="_blank">${result.recipe.label}</a></h3>
-        <a class="js-recipe-thumbnail" href="${result.recipe.shareAs}" target="_blank"><img src="${result.recipe.image}"></a>
-        <h5>This recipe is brought to you by ${result.recipe.source}</h5>
+        <h3><a href="${item.recipe.shareAs}" target="_blank">${item.recipe.label}</a></h3>
+        <a class="js-recipe-thumbnail" href="${item.recipe.shareAs}" target="_blank"><img src="${item.recipe.image}"></a>
+        <h5>This recipe is brought to you by ${item.recipe.source}</h5>
+         <button type="submit" class="js-recipe-ingredients">
+                Recipe Ingredients
+            </button> 
     </div>
     `;
 }
@@ -94,8 +103,8 @@ function renderRecipeResult(result) {
         let typedInput = $("#textSearch-2").val();
         console.log(typedInput);
         getDataFromApi(typedInput);
-        $("#textSearch").val('');
         STATE.route = 'results';
+        $("#textSearch-2").val('');
         console.log('you are back on the results page with new results');
         renderApp(STATE, PAGE_ELEMENTS);
     });
@@ -107,6 +116,36 @@ function renderRecipeResult(result) {
         console.log('you are back HOME');
         renderApp(STATE, PAGE_ELEMENTS);
     });
+
+    
+    
+    // event listener to reroute to recipe page and render recipe ingredients
+    $('.js-search-results').on('click', '.js-recipe-ingredients',function(event){
+        event.preventDefault();
+        STATE.route = 'recipe';
+        displayRecipeIngredients(STATE, event.currentTarget);
+        renderApp(STATE, PAGE_ELEMENTS);
+    })
+    
+    function displayRecipeIngredients(state, item) {
+    const data = state.data;
+    const results = renderRecipePage(STATE, data);
+    $('.js-recipe-page').html(results);
+}
+    
+    // render results page with single recipe and details
+    function renderRecipePage(state, element) {
+      return
+        `
+        <div>
+            <h3><a href="${item.recipe.shareAs}" target="_blank">${item.recipe.label}</a></h3>
+            <a class="js-recipe-thumbnail" href="${item.recipe.shareAs}" target="_blank"><img src="${item.recipe.image}"></a>
+            <h5>This recipe is brought to you by ${item.recipe.source}</h5>
+                <p>${item.recipe.ingredientLines}</p> 
+        </div>
+        `
+    }
+
 
 
     $(document).ready(function () {
